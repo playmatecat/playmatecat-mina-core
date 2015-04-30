@@ -10,15 +10,31 @@ public class MethodExecutePool {
 	
 	private final static Logger logger = Logger.getLogger(MethodExecutePool.class);
 	
-	private static int MAX_POOL_SIZE = 200;
-	
 	public static int runningThreadCount = 0;
+	
 	
 	/**任务缓冲列队**/
 	private static LinkedList<Runnable> queueTaskList = new LinkedList<Runnable>();
 	
 	/**任务扫描是否已经唯一开启过**/
 	private static boolean isScanInited = false;
+	
+	
+	/** cpu数量 **/
+	private final static int numberOfCores = Runtime.getRuntime().availableProcessors();
+
+	/** 阻塞系数 **/
+	private final static double blockingCoefficient = 0.9;
+	
+	/**
+	 * 线程池最大数量
+	 * 线程数=CPU可用核心数/（1 - 阻塞系数），其中阻塞系数在在0到1范围内。
+	 * 计算密集型程序的阻塞系数为0，IO密集型程序的阻塞系数接近1。
+	 */
+	private final static int MAX_POOL_SIZE = (int) (numberOfCores / (1 - blockingCoefficient));
+
+	
+	
 	
 	private MethodExecutePool(){};
 	
