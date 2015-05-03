@@ -19,14 +19,14 @@ import com.playmatecat.mina.NioTransferAdapter;
  */
 class ServerHandler extends IoHandlerAdapter {
 	
+	private static Logger logger = Logger.getLogger(ServerHandler.class);
+	
 	@Override
 	public void sessionCreated(IoSession session) throws Exception {
 		logger.info("session created!");
 		super.sessionCreated(session);
 	}
 
-	private static Logger logger = Logger.getLogger(ServerHandler.class);
-	
 	@Override
 	public void exceptionCaught(IoSession session, Throwable cause)
 			throws Exception {
@@ -43,7 +43,11 @@ class ServerHandler extends IoHandlerAdapter {
 	@Override
 	public void sessionOpened(IoSession session) throws Exception {
 		logger.info(MessageFormat.format("[Nio Server]Session opened.Remote address:{0}", session.getRemoteAddress() ));
-		super.sessionOpened(session);
+		try {
+			super.sessionOpened(session);
+		} catch (Exception e) {
+			logger.error("连接错误", e);
+		}
 	}
 
 	@Override

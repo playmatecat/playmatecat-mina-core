@@ -40,6 +40,7 @@ public class ApplicationContextHolder {
 					MethodExecutePool.keepScanExcuteMethod();
 				}
 			});
+			scanner.setDaemon(true);
 			scanner.start();
 		}
 	}

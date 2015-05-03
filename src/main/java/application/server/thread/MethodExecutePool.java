@@ -82,8 +82,11 @@ public class MethodExecutePool {
 					Thread.sleep(1);
 					if(runningThreadCount < MAX_POOL_SIZE) {
 						Runnable peekTask = queueTaskList.pollFirst();
-						Thread thread = new Thread(peekTask);
-						thread.start();
+						if(peekTask != null) {
+							Thread thread = new Thread(peekTask);
+							thread.setDaemon(true);
+							thread.start();
+						}
 					}
 				}
 			} catch (Exception e) {
