@@ -4,7 +4,22 @@
 	<groupId>com.playmatecat</groupId>
 	<artifactId>playmatecat-mina-core</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-
+    
+    <profiles>
+        <profile>
+            <id>jdk8</id>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+                <jdk>1.8</jdk>
+            </activation>
+            <properties>
+                <maven.compiler.source>1.8</maven.compiler.source>
+                <maven.compiler.target>1.8</maven.compiler.target>
+                <maven.compiler.compilerVersion>1.8</maven.compiler.compilerVersion>
+            </properties>
+        </profile>
+    </profiles>
+    
 	<dependencies>
 		<dependency>
 			<groupId>com.playmatecat</groupId>

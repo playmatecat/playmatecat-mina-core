@@ -10,7 +10,6 @@ import org.apache.mina.core.session.IoSession;
 import org.springframework.transaction.interceptor.TransactionInterceptor;
 
 import application.ApplicationContextHolder;
-import application.TxMethodProxy;
 
 import com.playmatecat.mina.NioTransferAdapter;
 

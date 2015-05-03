@@ -17,7 +17,7 @@ import com.playmatecat.mina.NioTransferAdapter;
  * @author blackcat
  *
  */
-public class ServerHandler extends IoHandlerAdapter {
+class ServerHandler extends IoHandlerAdapter {
 	
 	@Override
 	public void sessionCreated(IoSession session) throws Exception {

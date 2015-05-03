@@ -8,7 +8,7 @@ import java.util.concurrent.ConcurrentHashMap;
  * @author blackcat
  *
  */
-public class MethodCache {
+class MethodCache {
 	public final static ConcurrentHashMap<String, Method> methodMap = new ConcurrentHashMap<String, Method>();
 	
 	private MethodCache(){};

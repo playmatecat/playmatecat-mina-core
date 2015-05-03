@@ -1,10 +1,10 @@
-package application;
+package application.server.thread;
 
 import java.lang.reflect.Method;
 
 import org.springframework.aop.framework.ProxyFactory;
 
-public class TxMethodProxy {
+class TxMethodProxy {
 	private TxMethodProxy(){}
 
 	public static TxMethodInvocation getMethodInvocation(Object target, Method method, Object[] args)
