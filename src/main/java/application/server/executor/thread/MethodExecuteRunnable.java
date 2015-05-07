@@ -66,9 +66,11 @@ public class MethodExecuteRunnable extends Thread {
 				argsList.add(argObj);
 			}
 			args = argsList.toArray();
-			//执行调用
-			result = (String) transactionInterceptor.invoke(TxMethodProxy.getMethodInvocation(reflectCpt, method, args));
-
+			//执行调用,通过事务拦截器调用(因为读写数据库所以方法都应该有事务)
+			//result = (String) transactionInterceptor.invoke(TxMethodProxy.getMethodInvocation(reflectCpt, method, args));
+			
+			//直接反射测试模式，如果正式用上面注释的方法，用事务
+			result = (String) ReflectionUtils.invokeJdbcMethod(method, reflectCpt, args);
 		} catch (Throwable e) {
 			logger.error("反射方法调用错误", e);
 		}
