@@ -6,10 +6,8 @@ import org.apache.log4j.Logger;
 import org.apache.mina.core.service.IoHandlerAdapter;
 import org.apache.mina.core.session.IoSession;
 
-import application.server.thread.MethodExecutePool;
-import application.server.thread.MethodExecuteRunnable;
-
-import com.playmatecat.mina.NioTransferAdapter;
+import application.server.executor.Executor;
+import application.server.executor.thread.MethodExecuteRunnable;
 
 /**
  * 服务端消息处理器
@@ -37,17 +35,14 @@ class ServerHandler extends IoHandlerAdapter {
 	public void messageReceived(IoSession session, Object message)
 			throws Exception {
 		//转交给spring多线程扫描器
-		MethodExecutePool.execute(new MethodExecuteRunnable(session, message));
+		//MethodExecutePool.execute(new MethodExecuteRunnable(session, message));
+		Executor.start(new MethodExecuteRunnable(session, message));
 	}
 
 	@Override
 	public void sessionOpened(IoSession session) throws Exception {
 		logger.info(MessageFormat.format("[Nio Server]Session opened.Remote address:{0}", session.getRemoteAddress() ));
-		try {
-			super.sessionOpened(session);
-		} catch (Exception e) {
-			logger.error("连接错误", e);
-		}
+		super.sessionOpened(session);
 	}
 
 	@Override
