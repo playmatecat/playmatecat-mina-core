@@ -1,5 +1,6 @@
 package application.server.executor;
 
+import java.util.concurrent.ExecutorService;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
@@ -21,7 +22,7 @@ public class Executor {
 	
     /**concurrent包的线程池**/
 	private static ThreadPoolExecutor threadPoolExecutor = new ThreadPoolExecutor(poolMaxSize, poolMaxSize,
-		    60, TimeUnit.SECONDS, new LinkedBlockingQueue<Runnable>());
+		    60, TimeUnit.SECONDS, new LinkedBlockingQueue<Runnable>(), new ThreadPoolExecutor.DiscardOldestPolicy());
 	
 	private Executor(){}
 	
