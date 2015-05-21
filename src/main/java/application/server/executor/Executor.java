@@ -6,11 +6,11 @@ import java.util.concurrent.TimeUnit;
 
 public class Executor {
 	
-	/** cpu数量 **/
-    private final static int numberOfCores = Runtime.getRuntime().availableProcessors();
-
-    /** 阻塞系数 **/
-    private final static double blockingCoefficient = 0.9;
+//	/** cpu数量 **/
+//    private final static int numberOfCores = Runtime.getRuntime().availableProcessors();
+//
+//    /** 阻塞系数 **/
+//    private final static double blockingCoefficient = 0.9;
     
     /**
      * 线程池最大数量

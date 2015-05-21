@@ -11,7 +11,6 @@ import org.springframework.transaction.interceptor.TransactionInterceptor;
 import org.springframework.util.ReflectionUtils;
 
 import application.ApplicationContextHolder;
-import application.server.thread.MethodExecutePool;
 
 import com.playmatecat.mina.NioTransferAdapter;
 import com.playmatecat.utils.json.UtilsJson;
@@ -33,6 +32,10 @@ public class MethodExecuteRunnable extends Thread {
 
 	@Override
 	public void run() {
+		if(!(message instanceof NioTransferAdapter)) {
+			return;
+		}
+		
 		NioTransferAdapter nta = (NioTransferAdapter) message;
 		
 		//请求唯一标码
