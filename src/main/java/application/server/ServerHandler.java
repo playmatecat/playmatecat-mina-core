@@ -16,44 +16,43 @@ import application.server.executor.thread.MethodExecuteRunnable;
  *
  */
 class ServerHandler extends IoHandlerAdapter {
-	
-	private static Logger logger = Logger.getLogger(ServerHandler.class);
-	
-	@Override
-	public void sessionCreated(IoSession session) throws Exception {
-		logger.info("session created!");
-		super.sessionCreated(session);
-	}
 
-	@Override
-	public void exceptionCaught(IoSession session, Throwable cause)
-			throws Exception {
-		cause.printStackTrace();
-	}
+    private static Logger logger = Logger.getLogger(ServerHandler.class);
 
-	@Override
-	public void messageReceived(IoSession session, Object message)
-			throws Exception {
-		//转交给spring多线程扫描器
-		//MethodExecutePool.execute(new MethodExecuteRunnable(session, message));
-		Executor.start(new MethodExecuteRunnable(session, message));
-	}
+    @Override
+    public void sessionCreated(IoSession session) throws Exception {
+        logger.info("session created!");
+        super.sessionCreated(session);
+    }
 
-	@Override
-	public void sessionOpened(IoSession session) throws Exception {
-		logger.info(MessageFormat.format("[Nio Server]Session opened.Remote address:{0}", session.getRemoteAddress() ));
-		super.sessionOpened(session);
-	}
+    @Override
+    public void exceptionCaught(IoSession session, Throwable cause) throws Exception {
+        cause.printStackTrace();
+    }
 
-	@Override
-	public void sessionClosed(IoSession session) throws Exception {
-		logger.info(MessageFormat.format("[Nio Server]Session closed.Remote address:{0}", session.getRemoteAddress() ));
-		super.sessionClosed(session);
-	}
+    @Override
+    public void messageReceived(IoSession session, Object message) throws Exception {
+        // 转交给spring多线程扫描器
+        // MethodExecutePool.execute(new MethodExecuteRunnable(session,
+        // message));
+        Executor.start(new MethodExecuteRunnable(session, message));
+    }
 
-	@Override
-	public void messageSent(IoSession session, Object message) throws Exception {
-		super.messageSent(session, message);
-	}
+    @Override
+    public void sessionOpened(IoSession session) throws Exception {
+        logger.info(MessageFormat.format("[Nio Server]Session opened.Remote address:{0}", session.getRemoteAddress()));
+        super.sessionOpened(session);
+    }
+
+    @Override
+    public void sessionClosed(IoSession session) throws Exception {
+        logger.info(MessageFormat.format("[Nio Server]Session closed.Remote address:{0}", session.getRemoteAddress()));
+        super.sessionClosed(session);
+    }
+
+    @Override
+    public void messageSent(IoSession session, Object message) throws Exception {
+        super.messageSent(session, message);
+    }
 
 }
