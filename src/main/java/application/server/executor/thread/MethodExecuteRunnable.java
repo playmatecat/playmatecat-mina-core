@@ -70,7 +70,7 @@ public class MethodExecuteRunnable extends Thread {
             if (nta.getClazz() != null) {
                 argsList = new ArrayList<Object>();
                 // json数据重新转回对象
-                Object argObj = UtilsJson.parseJsonStr2Obj(nta.getJSONdata(), nta.getClazz());
+                Object argObj = UtilsJson.parseJsonStr2Obj(nta.getJsonData(), nta.getClazz());
                 argsList.add(argObj);
             }
             args = argsList.toArray();
