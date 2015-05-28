@@ -42,8 +42,6 @@ public class MethodExecuteRunnable extends Thread {
 
         NioTransferAdapter nta = (NioTransferAdapter) message;
 
-        // 请求唯一标码
-        String tmpGUID = nta.getGUID();
         // 请求的服务名,一般为组件名.方法
         String restServiceName = nta.getRestServiceName();
 
@@ -86,8 +84,8 @@ public class MethodExecuteRunnable extends Thread {
         }
 
         // 返回数据，并且设定相同的唯一标码来保证客户端识别是哪次请求
-        NioTransferAdapter rtnNta = new NioTransferAdapter(result);
-        rtnNta.setGUID(tmpGUID);
+        NioTransferAdapter rtnNta = new NioTransferAdapter(result, nta);
+
         // 通过mina传输数据
         session.write(rtnNta);
 
