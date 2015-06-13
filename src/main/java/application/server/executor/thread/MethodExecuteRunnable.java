@@ -13,9 +13,9 @@ import org.springframework.aop.framework.ProxyFactory;
 import org.springframework.transaction.interceptor.TransactionInterceptor;
 import org.springframework.util.ReflectionUtils;
 
-import com.playmatecat.mina.NioTransferAdapter;
-import com.playmatecat.mina.RequestServiceAdapter;
-import com.playmatecat.mina.ResponseServiceAdapter;
+import com.playmatecat.mina.stucture.NioTransferAdapter;
+import com.playmatecat.mina.stucture.RequestServiceAdapter;
+import com.playmatecat.mina.stucture.ResponseServiceAdapter;
 import com.playmatecat.utils.json.UtilsJson;
 import com.playmatecat.utils.spring.UtilsSpringContext;
 
