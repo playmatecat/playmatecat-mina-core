@@ -1,19 +1,21 @@
 package application.server.executor.thread;
 
 import java.lang.reflect.Method;
+import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.apache.mina.core.session.IoSession;
+import org.springframework.aop.aspectj.AspectJExpressionPointcut;
+import org.springframework.aop.framework.ProxyFactory;
 import org.springframework.transaction.interceptor.TransactionInterceptor;
 import org.springframework.util.ReflectionUtils;
 
-import application.ApplicationContextHolder;
-
 import com.playmatecat.mina.NioTransferAdapter;
 import com.playmatecat.utils.json.UtilsJson;
+import com.playmatecat.utils.spring.UtilsSpringContext;
 
 /**
  * 对mina接收到的方法,执行对应方法的线程执行体
@@ -50,17 +52,29 @@ public class MethodExecuteRunnable extends Thread {
 
         ctpName = "userCpt";
         ctpMethodName = "savetestCall";
-
+        
+        
         // 根据组件名获得执行类
-        Object reflectCpt = ApplicationContextHolder.getApplicationContext().getBean(ctpName);
+        //Object reflectCpt = ApplicationContextHolder.getApplicationContext().getBean(ctpName);
+        Object reflectCpt = UtilsSpringContext.getBean(ctpName);
         // nta.getClazz获得DTO的类型，作为反射调用函数的入参类型
         String result = StringUtils.EMPTY;
-
+        Method method = null;
+//        TransactionInterceptor transactionInterceptor 
+//            = (TransactionInterceptor) ApplicationContextHolder.getApplicationContext().getBean("txAdvice");
         TransactionInterceptor transactionInterceptor 
-            = (TransactionInterceptor) ApplicationContextHolder.getApplicationContext().getBean("txAdvice");
+            = (TransactionInterceptor) UtilsSpringContext.getBean("txAdvice");
         try {
+            if(reflectCpt == null) {
+                throw new Exception("服务组件不存在");
+            }
+
             // 找出方法,通过spring反射工具，自带缓存
-            Method method = ReflectionUtils.findMethod(reflectCpt.getClass(), ctpMethodName, nta.getClazz());
+            method = ReflectionUtils.findMethod(reflectCpt.getClass(), ctpMethodName, nta.getClazz());
+            
+            if(method == null) {
+                throw new Exception("服务组件的方法不存在");
+            }
 
             List<Object> argsList = null;
             Object[] args = null;
@@ -72,15 +86,27 @@ public class MethodExecuteRunnable extends Thread {
                 argsList.add(argObj);
             }
             args = argsList.toArray();
-            // 执行调用,通过事务拦截器调用(因为读写数据库所以方法都应该有事务)
-            // result = (String)
-            // transactionInterceptor.invoke(TxMethodProxy.getMethodInvocation(reflectCpt,
-            // method, args));
+            
+            //AspectJExpressionPointcut aj = (AspectJExpressionPointcut)UtilsSpringContext.getBean("pcServiceMethods");
 
+            // 执行调用,通过事务拦截器调用(因为读写数据库所以方法都应该有事务)
+            result = (String) transactionInterceptor.invoke(TxMethodProxy.getMethodInvocation(reflectCpt, method, args));
+            
             // 直接反射测试模式，如果正式用上面注释的方法，用事务
-            result = (String) ReflectionUtils.invokeJdbcMethod(method, reflectCpt, args);
+            //result = (String) ReflectionUtils.invokeJdbcMethod(method, reflectCpt, args);
         } catch (Throwable e) {
-            LOGGER.error("反射方法调用错误", e);
+            String errorClass = reflectCpt != null ? errorClass = reflectCpt.getClass().getName() : StringUtils.EMPTY;
+            String errorMethod = method != null? method.getName() : StringUtils.EMPTY;
+            String argsJson = nta.getJsonData();
+            String errMsg = MessageFormat.format("GUID:{0}, 错误信息:{1}, 类:{2}, 方法:{3}, 参数:{4}", 
+                    new Object[]{nta.getGUID(), e.getMessage(), errorClass, errorMethod, argsJson});
+            String simpleErrMsg =  MessageFormat.format("GUID:{0},错误信息:{1}",
+                    new Object[]{nta.getGUID(), e.getMessage()});
+            LOGGER.error("反射方法调用错误. " + errMsg, e);
+            NioTransferAdapter rtnNta = new NioTransferAdapter(null, nta);
+            rtnNta.setException(new Exception(simpleErrMsg));
+            session.write(rtnNta);
+            return;
         }
 
         // 返回数据，并且设定相同的唯一标码来保证客户端识别是哪次请求

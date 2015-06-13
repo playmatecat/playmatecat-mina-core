@@ -76,9 +76,6 @@ public class NioTCPServer {
         // 超时时间
         acceptor.getSessionConfig().setWriteTimeout(TIME_OUT);
 
-        // 加载spring配置文件
-        ApplicationContextHolder.init();
-
         try {
             // 绑定ip&端口
             acceptor.bind(new InetSocketAddress(ADDRESS, PORT));
