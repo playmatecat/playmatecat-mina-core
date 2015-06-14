@@ -48,13 +48,26 @@ public class MethodExecuteRunnable extends Thread {
 
         // 请求的服务名,一般为组件名.方法
         String restServiceName = reqNta.getRestServiceName();
-
-        String ctpName = "get From db by restServiceName";
-        String ctpMethodName = "get From db by restServiceName";
-
-        ctpName = "userCpt";
-        ctpMethodName = "savetestCall";
         
+        String[] restArr = null;
+        if (StringUtils.isNotBlank(restServiceName)) {
+            restArr = restServiceName.split("\\.");
+        }
+        
+        String ctpName = null;
+        String ctpMethodName = null;
+        
+        if(restArr.length == 2) {
+            ctpName = restArr[0];
+            ctpMethodName = restArr[1];
+        } else {
+            String emptyServiceErrMsg = MessageFormat.format("GUID:{0}. 请求的服务名不正确", reqNta.getGUID());
+            ResponseServiceAdapter rtnNta = new ResponseServiceAdapter(null, reqNta);
+            rtnNta.setException(new Exception(emptyServiceErrMsg));
+            session.write(rtnNta);
+            return;
+        }
+
         
         // 根据组件名获得执行类
         //Object reflectCpt = ApplicationContextHolder.getApplicationContext().getBean(ctpName);
