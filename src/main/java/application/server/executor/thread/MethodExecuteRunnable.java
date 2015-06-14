@@ -92,7 +92,8 @@ public class MethodExecuteRunnable extends Thread {
             //AspectJExpressionPointcut aj = (AspectJExpressionPointcut)UtilsSpringContext.getBean("pcServiceMethods");
 
             // 执行调用,通过事务拦截器调用(因为读写数据库所以方法都应该有事务)
-            result = (String) transactionInterceptor.invoke(TxMethodProxy.getMethodInvocation(reflectCpt, method, args));
+            Object resultObj = transactionInterceptor.invoke(TxMethodProxy.getMethodInvocation(reflectCpt, method, args));
+            result = UtilsJson.parseObj2JsonStr(resultObj);
             
             // 直接反射测试模式，如果正式用上面注释的方法，用事务
             //result = (String) ReflectionUtils.invokeJdbcMethod(method, reflectCpt, args);
