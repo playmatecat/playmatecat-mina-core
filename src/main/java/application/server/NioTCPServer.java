@@ -89,7 +89,7 @@ public class NioTCPServer {
     }
 
     public static void destory() {
-        acceptor.dispose();
+        acceptor.dispose(false);
         acceptor.unbind();
     }
 
