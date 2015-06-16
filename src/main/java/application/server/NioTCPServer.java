@@ -96,7 +96,7 @@ public class NioTCPServer {
             IoSession peekSeesion = sessionMap.get(keys.next());
             peekSeesion.close(true);
         }
-        acceptor.dispose(false);
+        acceptor.dispose(true);
         acceptor.unbind();
     }
 
