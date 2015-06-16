@@ -9,7 +9,7 @@ import java.util.concurrent.TimeUnit;
  * @author blackcat
  *
  */
-public class Executor {
+public class MinaExecutor {
 
     // /** cpu数量 **/
     // private final static int numberOfCores =
@@ -40,10 +40,14 @@ public class Executor {
         = new ThreadPoolExecutor(POOL_MAX_SIZE, POOL_MAX_SIZE, 60, TimeUnit.SECONDS,
             new LinkedBlockingQueue<Runnable>(), new ThreadPoolExecutor.DiscardOldestPolicy());
 
-    private Executor() {
+    private MinaExecutor() {
     }
 
     public static void start(Thread thread) {
         threadPoolExecutor.execute(thread);
+    }
+    
+    public static void destory() {
+        threadPoolExecutor.shutdownNow();
     }
 }

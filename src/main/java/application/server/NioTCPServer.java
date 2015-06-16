@@ -11,6 +11,8 @@ import org.apache.mina.filter.codec.ProtocolCodecFilter;
 import org.apache.mina.filter.codec.serialization.ObjectSerializationCodecFactory;
 import org.apache.mina.transport.socket.nio.NioSocketAcceptor;
 
+import application.server.executor.MinaExecutor;
+
 /**
  * mina NIO服务端
  * 
@@ -90,13 +92,15 @@ public class NioTCPServer {
     }
 
     public static void destory() {
+        MinaExecutor.destory();
         Map<Long, IoSession> sessionMap = acceptor.getManagedSessions();
         Iterator<Long> keys = sessionMap.keySet().iterator();
         while (keys.hasNext()) {
             IoSession peekSeesion = sessionMap.get(keys.next());
+            peekSeesion.getService().dispose(false);
             peekSeesion.close(true);
         }
-        acceptor.dispose(true);
+        acceptor.dispose(false);
         acceptor.unbind();
     }
 

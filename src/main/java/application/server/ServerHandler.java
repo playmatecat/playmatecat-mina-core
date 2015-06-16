@@ -6,7 +6,7 @@ import org.apache.log4j.Logger;
 import org.apache.mina.core.service.IoHandlerAdapter;
 import org.apache.mina.core.session.IoSession;
 
-import application.server.executor.Executor;
+import application.server.executor.MinaExecutor;
 import application.server.executor.thread.MethodExecuteRunnable;
 
 /**
@@ -36,7 +36,7 @@ class ServerHandler extends IoHandlerAdapter {
         // 转交给spring多线程扫描器
         // MethodExecutePool.execute(new MethodExecuteRunnable(session,
         // message));
-        Executor.start(new MethodExecuteRunnable(session, message));
+        MinaExecutor.start(new MethodExecuteRunnable(session, message));
     }
 
     @Override
