@@ -1,14 +1,15 @@
 package application.server;
 
 import java.net.InetSocketAddress;
+import java.util.Iterator;
+import java.util.Map;
 
 import org.apache.log4j.Logger;
 import org.apache.mina.core.session.IdleStatus;
+import org.apache.mina.core.session.IoSession;
 import org.apache.mina.filter.codec.ProtocolCodecFilter;
 import org.apache.mina.filter.codec.serialization.ObjectSerializationCodecFactory;
 import org.apache.mina.transport.socket.nio.NioSocketAcceptor;
-
-import application.ApplicationContextHolder;
 
 /**
  * mina NIO服务端
@@ -89,6 +90,12 @@ public class NioTCPServer {
     }
 
     public static void destory() {
+        Map<Long, IoSession> sessionMap = acceptor.getManagedSessions();
+        Iterator<Long> keys = sessionMap.keySet().iterator();
+        while (keys.hasNext()) {
+            IoSession peekSeesion = sessionMap.get(keys.next());
+            peekSeesion.close(true);
+        }
         acceptor.dispose(false);
         acceptor.unbind();
     }

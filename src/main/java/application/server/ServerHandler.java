@@ -27,7 +27,8 @@ class ServerHandler extends IoHandlerAdapter {
 
     @Override
     public void exceptionCaught(IoSession session, Throwable cause) throws Exception {
-        cause.printStackTrace();
+        String msg = "与{0}通信过程中出现错误:[{1}]";
+        logger.info(MessageFormat.format(msg, new Object[]{session.getRemoteAddress(), cause.getMessage()}));
     }
 
     @Override
