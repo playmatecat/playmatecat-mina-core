@@ -48,6 +48,20 @@ public class MinaExecutor {
     }
     
     public static void destory() {
+        threadPoolExecutor.shutdown();
+        try {
+            Thread.sleep(1000);
+            threadPoolExecutor.getActiveCount();
+            if(threadPoolExecutor.getActiveCount() != 0) {
+                Thread.sleep(5000);
+            } else {
+                return;
+            }
+        } catch (Exception e) {
+            //do nothing
+        }
+        
+        //如果最终依然有线程未终止,则强制终止所有线程(包括之前已经发起还在执行中的任务线程)
         threadPoolExecutor.shutdownNow();
     }
 }
